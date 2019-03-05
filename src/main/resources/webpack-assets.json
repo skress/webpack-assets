@@ -1,0 +1,26 @@
+{
+  "main": {
+    "js": [
+      "/assets/javascripts/runtime.bundle.js",
+      "/assets/javascripts/vendors~main~signIn~signUp.bundle.js",
+      "/assets/javascripts/main~signIn~signUp.bundle.js",
+      "/assets/javascripts/main.bundle.js"
+    ],
+    "css": [
+      "/assets/css/main.css",
+      "/assets/css/shared.css"
+    ]
+  },
+  "signUp": {
+    "js": [
+      "/assets/javascripts/wp/runtime.bundle.js",
+      "/assets/javascripts/wp/vendors~main~signIn~signUp.bundle.js",
+      "/assets/javascripts/wp/main~signIn~signUp.bundle.js",
+      "/assets/javascripts/wp/signUp.bundle.js"
+    ],
+    "css": "/assets/css/signUp.css"
+  },
+  "signIn": {
+    "js": "/assets/javascripts/wp/signIn.bundle.js"
+  }
+}
