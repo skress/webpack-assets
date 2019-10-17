@@ -20,21 +20,21 @@ import java.util.concurrent.atomic.AtomicReference
 
 trait WebpackAssets {
 
-  def of(name: BundleName): Map[AssetType, Seq[AssetFilename]]
+  def of(name: BundleName): Map[AssetType, collection.Seq[AssetFilename]]
 
-  def of(name: BundleName, assetType: AssetType): Seq[AssetFilename]
+  def of(name: BundleName, assetType: AssetType): collection.Seq[AssetFilename]
 
 }
 
 class ImmutableWebpackAssets(
-  private val entries: Map[BundleName, Map[AssetType, Seq[AssetFilename]]]
+  private val entries: Map[BundleName, Map[AssetType, collection.Seq[AssetFilename]]]
 ) extends WebpackAssets {
 
-  def of(name: BundleName): Map[AssetType, Seq[AssetFilename]] = {
+  def of(name: BundleName): Map[AssetType, collection.Seq[AssetFilename]] = {
     entries.getOrElse(name.toLowerCase, Map.empty)
   }
 
-  def of(name: BundleName, assetType: AssetType): Seq[AssetFilename] = {
+  def of(name: BundleName, assetType: AssetType): collection.Seq[AssetFilename] = {
     of(name.toLowerCase).getOrElse(assetType.toLowerCase, Seq.empty)
   }
 
@@ -45,10 +45,10 @@ class MutableWebpackAssets extends WebpackAssets {
   private val assets: AtomicReference[WebpackAssets] =
     new AtomicReference[WebpackAssets]()
 
-  def of(name: BundleName): Map[AssetType, Seq[AssetFilename]] =
+  def of(name: BundleName): Map[AssetType, collection.Seq[AssetFilename]] =
     Option(assets.get).map(_.of(name)).getOrElse(Map.empty)
 
-  def of(name: BundleName, assetType: AssetType): Seq[AssetFilename] =
+  def of(name: BundleName, assetType: AssetType): collection.Seq[AssetFilename] =
     Option(assets.get).map(_.of(name, assetType)).getOrElse(Seq.empty)
 
   /**
@@ -70,10 +70,10 @@ object DefaultWebpackAssets extends WebpackAssets {
 
   val assets = new MutableWebpackAssets()
 
-  override def of(name: BundleName): Map[AssetType, Seq[AssetFilename]] =
+  override def of(name: BundleName): Map[AssetType, collection.Seq[AssetFilename]] =
     assets.of(name)
 
-  override def of(name: BundleName, assetType: AssetType): Seq[AssetFilename] =
+  override def of(name: BundleName, assetType: AssetType): collection.Seq[AssetFilename] =
     assets.of(name, assetType)
 
   def updateFrom(filename: String): Unit = assets.updateFrom(filename)

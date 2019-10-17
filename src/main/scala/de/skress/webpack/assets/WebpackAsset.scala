@@ -16,4 +16,4 @@
 
 package de.skress.webpack.assets
 
-case class WebpackAsset(bundleName: String, assets: Map[AssetType, List[String]])
+case class WebpackAsset(bundleName: String, assets: collection.Map[AssetType, List[String]])

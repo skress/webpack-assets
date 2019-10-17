@@ -18,6 +18,7 @@ package de.skress.webpack.assets
 
 import java.io.{FileInputStream, InputStream}
 import play.api.libs.json._
+import scala.collection.Seq
 
 class WebpackAssetsParser {
 
@@ -55,8 +56,8 @@ class WebpackAssetsParser {
             assetType.toLowerCase,
             assFiles
               .asOpt[JsString]
-              .map(s => List(s.value))
-              .getOrElse(assFiles.as[JsArray].value.map(_.as[JsString].value))
+              .map(s => Seq(s.value))
+              .getOrElse(assFiles.as[JsArray].value.map(_.as[JsString].value : AssetFilename))
           )
         )
       }
