@@ -36,7 +36,7 @@ class WebpackAssetsSpec extends org.specs2.mutable.Specification {
       val lowerCase = assets.of("main", "js")
       val upperCase = assets.of("main", "JS")
       lowerCase.length must be_>(0)
-      lowerCase must contain(exactly(upperCase: _*))
+      lowerCase must_== upperCase
     }
     "signIn bundle must have no css assets" >> {
       assets.of("signIn", "ss").length must_== 0

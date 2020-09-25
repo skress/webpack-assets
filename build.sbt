@@ -16,7 +16,9 @@
 
 name := "webpack-assets"
 
-baseVersion in ThisBuild := "1.1.0"
+scalaVersion := "2.13.3"
+
+baseVersion in ThisBuild := "1.1.1"
 
 organization in ThisBuild := "de.skress"
 publishGithubUser in ThisBuild := "skress"
@@ -27,7 +29,7 @@ strictSemVer in ThisBuild := false
 bintrayVcsUrl in Global := Some("git@github.com:skress/webpack-assets.git")
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play-json"    % "2.8.0-M6",
-  "org.specs2"        %% "specs2-core"  % "4.8.0" % "test",
-  "org.specs2"        %% "specs2-junit" % "4.8.0" % "test"
+  "com.typesafe.play" %% "play-json"    % "2.9.1",
+  "org.specs2"        %% "specs2-core"  % "4.10.3" % "test",
+  "org.specs2"        %% "specs2-junit" % "4.10.3" % "test"
 )
