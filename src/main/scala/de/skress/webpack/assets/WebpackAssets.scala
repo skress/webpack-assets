@@ -74,22 +74,28 @@ object DefaultWebpackAssets extends WebpackAssets {
   override def of(name: BundleName, assetType: AssetType): collection.Seq[AssetFilename] =
     assets.of(name, assetType)
 
-  def updateFrom(manifest: String): Unit = assets.updateFrom(manifest)
+  def updateFrom(manifest: WebpackManifestFile): Unit = assets.updateFrom(manifest)
 }
 
 object MultiWebpackAssets {
 
-  private val multiAssets = new TrieMap[WebpackManifestFile, MutableWebpackAssets]()
+  private val multiAssets = new TrieMap[String, MutableWebpackAssets]()
 
-  def of(manifest: WebpackManifestFile, name: BundleName): Map[AssetType, collection.Seq[AssetFilename]] =
-    multiAssets.get(manifest).map(_.of(name)).getOrElse(Map.empty)
+  def of(alias: String, name: BundleName): Map[AssetType, collection.Seq[AssetFilename]] =
+    multiAssets.get(alias).map(_.of(name)).getOrElse(Map.empty)
 
-  def of(manifest: WebpackManifestFile, name: BundleName, assetType: AssetType): collection.Seq[AssetFilename] =
-    multiAssets.get(manifest).map(_.of(name, assetType)).getOrElse(Seq.empty)
+  def of(alias: String, name: BundleName, assetType: AssetType): collection.Seq[AssetFilename] =
+    multiAssets.get(alias).map(_.of(name, assetType)).getOrElse(Seq.empty)
 
-  def updateFrom(manifest: WebpackManifestFile): Unit = {
+  /**
+    * Updates the assets from the given input filename `manifest` and stores it under the given `alias`.
+    *
+    * @param manifest filename of the assets file
+    * @param alias key which needs to be used to retrieve the assets (i.e. use this alias when using the `of` methods)
+    */
+  def updateFrom(manifest: WebpackManifestFile, alias: String): Unit = {
     val assets = new MutableWebpackAssets()
     assets.updateFrom(manifest)
-    multiAssets.update(manifest, assets)
+    multiAssets.update(alias, assets)
   }
 }
