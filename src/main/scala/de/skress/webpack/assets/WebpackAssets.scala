@@ -18,6 +18,8 @@ package de.skress.webpack.assets
 
 import java.util.concurrent.atomic.AtomicReference
 
+import scala.collection.concurrent.TrieMap
+
 trait WebpackAssets {
 
   def of(name: BundleName): Map[AssetType, collection.Seq[AssetFilename]]
@@ -26,9 +28,7 @@ trait WebpackAssets {
 
 }
 
-class ImmutableWebpackAssets(
-  private val entries: Map[BundleName, Map[AssetType, collection.Seq[AssetFilename]]]
-) extends WebpackAssets {
+class ImmutableWebpackAssets(private val entries: Map[BundleName, Map[AssetType, collection.Seq[AssetFilename]]]) extends WebpackAssets {
 
   def of(name: BundleName): Map[AssetType, collection.Seq[AssetFilename]] = {
     entries.getOrElse(name.toLowerCase, Map.empty)
@@ -57,18 +57,16 @@ class MutableWebpackAssets extends WebpackAssets {
     * The parser will first try to load the assets manifest from the classpath. If that does not succeed it tries
     * to load the file from the filesystem.
     *
-    * @param filename
+    * @param manifest filename of webpack assets file to parse
     */
-  def updateFrom(filename: String): Unit = {
-    assets.set(
-      new ImmutableWebpackAssets(new WebpackAssetsParser().parse(filename))
-    )
+  def updateFrom(manifest: WebpackManifestFile): Unit = {
+    assets.set(new ImmutableWebpackAssets(new WebpackAssetsParser().parse(manifest)))
   }
 }
 
 object DefaultWebpackAssets extends WebpackAssets {
 
-  val assets = new MutableWebpackAssets()
+  private val assets = new MutableWebpackAssets()
 
   override def of(name: BundleName): Map[AssetType, collection.Seq[AssetFilename]] =
     assets.of(name)
@@ -76,5 +74,22 @@ object DefaultWebpackAssets extends WebpackAssets {
   override def of(name: BundleName, assetType: AssetType): collection.Seq[AssetFilename] =
     assets.of(name, assetType)
 
-  def updateFrom(filename: String): Unit = assets.updateFrom(filename)
+  def updateFrom(manifest: String): Unit = assets.updateFrom(manifest)
+}
+
+object MultiWebpackAssets {
+
+  private val multiAssets = new TrieMap[WebpackManifestFile, MutableWebpackAssets]()
+
+  def of(manifest: WebpackManifestFile, name: BundleName): Map[AssetType, collection.Seq[AssetFilename]] =
+    multiAssets.get(manifest).map(_.of(name)).getOrElse(Map.empty)
+
+  def of(manifest: WebpackManifestFile, name: BundleName, assetType: AssetType): collection.Seq[AssetFilename] =
+    multiAssets.get(manifest).map(_.of(name, assetType)).getOrElse(Seq.empty)
+
+  def updateFrom(manifest: WebpackManifestFile): Unit = {
+    val assets = new MutableWebpackAssets()
+    assets.updateFrom(manifest)
+    multiAssets.update(manifest, assets)
+  }
 }

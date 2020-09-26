@@ -18,7 +18,7 @@ name := "webpack-assets"
 
 scalaVersion := "2.13.3"
 
-baseVersion in ThisBuild := "1.1.1"
+baseVersion in ThisBuild := "1.2.0"
 
 organization in ThisBuild := "de.skress"
 publishGithubUser in ThisBuild := "skress"

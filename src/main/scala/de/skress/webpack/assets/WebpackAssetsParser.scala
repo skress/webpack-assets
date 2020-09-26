@@ -27,18 +27,15 @@ class WebpackAssetsParser {
     * an entry for each Webpack bundle. Each of these entries are maps that map from asset type (e.g. "js", "css")
     * to a sequence of asset filenames.
     *
-    * @param filename
+    * @param manifest filename of webpack assets file to parse
     * @return parsed webpack assets file as a map
     */
-  def parse(
-    filename: String
-  ): Map[BundleName, Map[AssetType, Seq[AssetFilename]]] = {
+  def parse(manifest: WebpackManifestFile): Map[BundleName, Map[AssetType, Seq[AssetFilename]]] = {
     // webpack assets plugin generates a JsObject ...
-    val rootObject = Json.parse(getResource(filename)).as[JsObject]
+    val rootObject = Json.parse(getResource(manifest)).as[JsObject]
 
     val result =
-      new collection.mutable.HashMap[BundleName, Map[AssetType,
-                                                     Seq[AssetFilename]]]()
+      new collection.mutable.HashMap[BundleName, Map[AssetType, Seq[AssetFilename]]]()
 
     // ... which has the bundles as properties ...
     for ((bundleName, bundleAssets) <- rootObject.fields) {
@@ -49,15 +46,15 @@ class WebpackAssetsParser {
         new collection.mutable.HashMap[AssetType, Seq[AssetFilename]]()
 
       // ... that has the file types (e.g. "JS", "CSS") as top elements
-      for ((assetType, assFiles) <- assets.fields) {
+      for ((assetType, assetFiles) <- assets.fields) {
         // ... and for each file type there is either exactly one file name or an array of file names
         bundleResult += (
           (
             assetType.toLowerCase,
-            assFiles
+            assetFiles
               .asOpt[JsString]
               .map(s => Seq(s.value))
-              .getOrElse(assFiles.as[JsArray].value.map(_.as[JsString].value : AssetFilename))
+              .getOrElse(assetFiles.as[JsArray].value.map(_.as[JsString].value: AssetFilename))
           )
         )
       }
@@ -67,7 +64,6 @@ class WebpackAssetsParser {
   }
 
   private def getResource(filename: String): InputStream = {
-    Option(getClass.getResourceAsStream(filename))
-      .getOrElse(new FileInputStream(filename))
+    Option(getClass.getResourceAsStream(filename)).getOrElse(new FileInputStream(filename))
   }
 }

@@ -22,12 +22,14 @@ class WebpackAssetsSpec extends org.specs2.mutable.Specification {
 
   "When parsing the example assets definition" >> {
     "main bundle must have 4 js assets" >> {
-      assets.of("main", "js") must contain(exactly(
-        "/assets/javascripts/runtime.bundle.js",
-        "/assets/javascripts/vendors~main~signIn~signUp.bundle.js",
-        "/assets/javascripts/main~signIn~signUp.bundle.js",
-        "/assets/javascripts/main.bundle.js"
-      ))
+      assets.of("main", "js") must contain(
+        exactly(
+          "/assets/javascripts/runtime.bundle.js",
+          "/assets/javascripts/vendors~main~signIn~signUp.bundle.js",
+          "/assets/javascripts/main~signIn~signUp.bundle.js",
+          "/assets/javascripts/main.bundle.js"
+        )
+      )
     }
     "signIn bundle must have 1 js asset" >> {
       assets.of("signIn", "js") must contain(exactly("/assets/javascripts/signIn.bundle.js"))

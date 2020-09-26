@@ -18,8 +18,9 @@ package de.skress.webpack
 
 package object assets {
 
-  type BundleName = String
-  type AssetType = String
-  type AssetFilename = String
+  type WebpackManifestFile = String
+  type BundleName          = String
+  type AssetType           = String
+  type AssetFilename       = String
 
 }
