@@ -16,20 +16,20 @@
 
 name := "webpack-assets"
 
-scalaVersion := "2.13.3"
+scalaVersion := "2.13.5"
 
-baseVersion in ThisBuild := "1.2.1"
+ThisBuild / versionScheme := Some("early-semver")
+ThisBuild / version := "1.2.2"
 
-organization in ThisBuild := "de.skress"
-publishGithubUser in ThisBuild := "skress"
-publishFullName in ThisBuild := "Soeren Kress"
-startYear in ThisBuild := Some(2019)
-strictSemVer in ThisBuild := false
+ThisBuild / organization := "de.skress"
 
-bintrayVcsUrl in Global := Some("git@github.com:skress/webpack-assets.git")
+lazy val root = (project in file("."))
+  .settings(
+    publishMavenStyle := true
+  )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play-json"    % "2.9.1",
-  "org.specs2"        %% "specs2-core"  % "4.10.3" % "test",
-  "org.specs2"        %% "specs2-junit" % "4.10.3" % "test"
+  "com.typesafe.play" %% "play-json"    % "2.9.2",
+  "org.specs2"        %% "specs2-core"  % "4.10.6" % "test",
+  "org.specs2"        %% "specs2-junit" % "4.10.6" % "test"
 )

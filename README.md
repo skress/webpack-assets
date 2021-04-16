@@ -4,10 +4,7 @@ Parses the output of [assets-webpack-plugin](https://www.npmjs.com/package/asset
 
 ## Usage
 
-```sbt
-resolvers += Resolver.bintrayRepo("skress", "maven")
-libraryDependencies += "de.skress" %% "webpack-assets" % "<version>"
-```
+Compile and `publishLocal` or publish to your own Sonatype repository.
 
 ### Configure webpack
 
